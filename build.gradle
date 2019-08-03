@@ -30,7 +30,7 @@ configurations {
 }
 
 dependencies {
-    compile "io.micronaut:micronaut-http-client"
+    compile "io.micronaut:micronaut-websocket"
     compile "io.micronaut:micronaut-http-server-netty"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
     compile "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
