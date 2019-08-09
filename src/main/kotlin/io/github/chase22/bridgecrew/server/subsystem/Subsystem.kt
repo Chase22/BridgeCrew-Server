@@ -4,6 +4,7 @@ import io.github.chase22.bridgecrew.server.base.Updateable
 import io.github.chase22.bridgecrew.server.ship.Ship
 
 abstract class Subsystem(
+        val id: String,
         var active: Boolean
 ) : Updateable<Ship> {
     abstract fun getTemperatureChange(): Int

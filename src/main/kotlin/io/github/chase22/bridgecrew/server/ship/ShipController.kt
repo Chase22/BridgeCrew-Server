@@ -12,24 +12,26 @@ import javax.inject.Inject
 
 @Controller("/ship")
 class ShipController @Inject constructor(
-        private val webSocketServer: WebSocketServer
+        private val webSocketServer: WebSocketServer,
+        private val shipService: ShipService
 ) : ShipOperations {
 
-    override fun getSubsystems(id: String, type: SubsystemType?): Single<MutableHttpResponse<List<Subsystem>>> {
-        return Single.just(HttpResponse.ok(emptyList()))
-    }
-
-    private var ship: Ship = Ship(
-            100, 150, 300, 100, 100, true, emptyList()
-    )
+    override fun getSubsystems(id: String, type: SubsystemType?): Single<MutableHttpResponse<List<Subsystem>>> =
+            shipService.getShip(id)
+                    .map { it.subsystem }
+                    .map { HttpResponse.ok(it) }
+                    .toSingle(HttpResponse.notFound())
 
     @Get
     override fun getShip(@PathVariable id: String): Single<MutableHttpResponse<ShipRvo>> =
-            Single.just(HttpResponse.ok(ship.toRvo()))
+            shipService.getShip(id)
+                    .map(Ship::toRvo)
+                    .map { HttpResponse.ok(it) }
+                    .toSingle(HttpResponse.notFound())
 
     @Post
     override fun postShip(@Body shipRvo: ShipRvo): Single<HttpStatus> {
-        this.ship = Ship(shipRvo)
+        shipService.save(Ship(shipRvo))
         webSocketServer.broadcast(shipRvo)
         return Single.just(HttpStatus.CREATED)
     }
