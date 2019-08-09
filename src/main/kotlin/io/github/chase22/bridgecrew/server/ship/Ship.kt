@@ -2,6 +2,7 @@ package io.github.chase22.bridgecrew.server.ship
 
 import io.github.chase22.bridgecrew.server.base.Updateable
 import io.github.chase22.bridgecrew.server.subsystem.Subsystem
+import io.github.chase22.bridgecrew.server.subsystem.SubsystemType
 
 data class Ship(
         var energy: Long,
@@ -11,8 +12,16 @@ data class Ship(
         val maxHullPoints: Long,
         var alive: Boolean,
         var subsystem: List<Subsystem>
-): Updateable<Unit> {
+) : Updateable<Unit> {
     override fun update(context: Unit) {
-        subsystem.forEach { it.update(this) }
+        subsystem.sortedBy { subsystem ->
+            subsystem.getTypes().minBy { subsystemType -> subsystemType.ordinal }!!
+        }.forEach {
+            temperature += it.getTemperatureChange()
+            it.update(this)
+        }
     }
+
+    fun getSubsystemsByType(type: SubsystemType): List<Subsystem> =
+            subsystem.filter { subsystem -> subsystem.getTypes().contains(type) }
 }
