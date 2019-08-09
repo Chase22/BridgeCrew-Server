@@ -13,6 +13,17 @@ data class Ship(
         var alive: Boolean,
         var subsystem: List<Subsystem>
 ) : Updateable<Unit> {
+
+    constructor(shipRvo: ShipRvo): this(
+            shipRvo.energy,
+            shipRvo.temperature,
+            shipRvo.maxTemperature,
+            shipRvo.hullPoints,
+            shipRvo.maxHullPoints,
+            shipRvo.alive,
+            shipRvo.subsystem ?: ArrayList()
+    )
+
     override fun update(context: Unit) {
         subsystem.sortedBy { subsystem ->
             subsystem.getTypes().minBy { subsystemType -> subsystemType.ordinal }!!
@@ -22,6 +33,10 @@ data class Ship(
         }
     }
 
-    fun getSubsystemsByType(type: SubsystemType): List<Subsystem> =
+    fun getSubsystemsByType(type: SubsystemType): List<Subsystem>? =
             subsystem.filter { subsystem -> subsystem.getTypes().contains(type) }
+
+    fun toRvo(): ShipRvo {
+        return ShipRvo(energy, temperature, maxTemperature, hullPoints, maxHullPoints, alive, subsystem)
+    }
 }

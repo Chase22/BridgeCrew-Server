@@ -10,13 +10,13 @@ import io.reactivex.Single
 interface ShipOperations {
 
     @Get("/{id}")
-    fun getShip(@PathVariable id: String): Single<MutableHttpResponse<Ship>>
+    fun getShip(@PathVariable id: String): Single<MutableHttpResponse<ShipRvo>>
 
     @Get("/{id}/subsystems")
     fun getSubsystems(@PathVariable id: String, @QueryValue type: SubsystemType?): Single<MutableHttpResponse<List<Subsystem>>>
 
     @Post
-    fun postShip(@Body ship: Ship): Single<HttpStatus>
+    fun postShip(@Body shipRvo: ShipRvo): Single<HttpStatus>
 
 
 }

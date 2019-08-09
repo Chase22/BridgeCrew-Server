@@ -24,12 +24,13 @@ class ShipController @Inject constructor(
     )
 
     @Get
-    override fun getShip(@PathVariable id: String): Single<MutableHttpResponse<Ship>> = Single.just(HttpResponse.ok(ship))
+    override fun getShip(@PathVariable id: String): Single<MutableHttpResponse<ShipRvo>> =
+            Single.just(HttpResponse.ok(ship.toRvo()))
 
     @Post
-    override fun postShip(@Body ship: Ship): Single<HttpStatus> {
-        this.ship = ship
-        webSocketServer.broadcast(ship)
+    override fun postShip(@Body shipRvo: ShipRvo): Single<HttpStatus> {
+        this.ship = Ship(shipRvo)
+        webSocketServer.broadcast(shipRvo)
         return Single.just(HttpStatus.CREATED)
     }
 }
