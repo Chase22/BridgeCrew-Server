@@ -49,6 +49,7 @@ dependencies {
     testCompile "io.micronaut.test:micronaut-test-spock"
     testCompile "net.bytebuddy:byte-buddy:1.9.10"
     testCompile "org.objenesis:objenesis:3.0.1"
+    testCompile "io.micronaut:micronaut-http-client"
 }
 
 test.classpath += configurations.developmentOnly
