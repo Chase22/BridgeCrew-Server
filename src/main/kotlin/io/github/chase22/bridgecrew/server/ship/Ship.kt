@@ -2,6 +2,7 @@ package io.github.chase22.bridgecrew.server.ship
 
 import io.github.chase22.bridgecrew.server.base.Updateable
 import io.github.chase22.bridgecrew.server.subsystem.Subsystem
+import io.github.chase22.bridgecrew.server.subsystem.SubsystemRvo
 import io.github.chase22.bridgecrew.server.subsystem.SubsystemType
 
 data class Ship(
@@ -13,26 +14,6 @@ data class Ship(
         val maxHullPoints: Long,
         var subsystem: List<Subsystem>
 ) : Updateable<Unit> {
-
-    constructor(shipRvo: ShipRvo): this(
-            shipRvo.id,
-            shipRvo.energy,
-            shipRvo.temperature,
-            shipRvo.maxTemperature,
-            shipRvo.hullPoints,
-            shipRvo.maxHullPoints,
-            shipRvo.subsystem ?: ArrayList()
-    )
-
-    constructor(shipEntity: ShipEntity): this(
-            shipEntity.id,
-            shipEntity.energy,
-            shipEntity.temperature,
-            shipEntity.maxTemperature,
-            shipEntity.hullPoints,
-            shipEntity.maxHullPoints,
-            ArrayList()
-    )
 
     override fun update(context: Unit) {
         subsystem.sortedBy { subsystem ->
@@ -47,7 +28,7 @@ data class Ship(
             subsystem.filter { subsystem -> subsystem.getTypes().contains(type) }
 
     fun toRvo(): ShipRvo {
-        return ShipRvo(id, energy, temperature, maxTemperature, hullPoints, maxHullPoints, subsystem)
+        return ShipRvo(id, energy, temperature, maxTemperature, hullPoints, maxHullPoints, subsystem.map { it.toRvo() })
     }
 
     fun toEntity(): ShipEntity {
@@ -62,7 +43,7 @@ data class ShipRvo (
         val maxTemperature: Int,
         val hullPoints: Long,
         val maxHullPoints: Long,
-        val subsystem: List<Subsystem>?
+        val subsystem: List<SubsystemRvo>?
 )
 
 data class ShipEntity (

@@ -64,7 +64,7 @@ class ShipClassSpec extends Specification {
             getTypes() >> [ENERGY_PRODUCTION]
         }
         Subsystem subsystem3 = Mock() {
-            getTypes() >> [TEMEPERATURE_MANAGEMENT]
+            getTypes() >> [TEMPERATURE_MANAGEMENT]
         }
         ship.subsystem = [subsystem1, subsystem2, subsystem3]
 

@@ -1,6 +1,6 @@
 package io.github.chase22.bridgecrew.server.ship
 
-import io.github.chase22.bridgecrew.server.subsystem.Subsystem
+import io.github.chase22.bridgecrew.server.subsystem.SubsystemRvo
 import io.github.chase22.bridgecrew.server.subsystem.SubsystemType
 import io.github.chase22.bridgecrew.server.websocket.WebSocketServer
 import io.micronaut.http.HttpResponse
@@ -16,9 +16,11 @@ class ShipController @Inject constructor(
         private val shipService: ShipService
 ) : ShipOperations {
 
-    override fun getSubsystems(id: String, type: SubsystemType?): Single<MutableHttpResponse<List<Subsystem>>> =
+    override fun getSubsystems(id: String, type: SubsystemType?): Single<MutableHttpResponse<List<SubsystemRvo>>> =
             shipService.getShip(id)
                     .map { it.subsystem }
+                    .map { t -> t.filter { type?.let { type -> it.getTypes().contains(type) } ?: true } }
+                    .map { it.map { subsystem -> subsystem.toRvo() } }
                     .map { HttpResponse.ok(it) }
                     .toSingle(HttpResponse.notFound())
 
@@ -31,7 +33,7 @@ class ShipController @Inject constructor(
 
     @Post
     override fun postShip(@Body shipRvo: ShipRvo): Single<HttpStatus> {
-        shipService.save(Ship(shipRvo))
+        shipService.save(shipService.fromRvo(shipRvo))
         webSocketServer.broadcast(shipRvo)
         return Single.just(HttpStatus.CREATED)
     }
