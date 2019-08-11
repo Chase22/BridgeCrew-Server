@@ -36,7 +36,7 @@ class ShipApiServiceSpec extends Specification implements WithShipApiActor {
         subsystems.size() == 3
     }
 
-    def "/ship/subsystems/ENERGY_STORAGE should return all subsystems of the given type"() {
+    def "/ship/subsystems/{type} should return all subsystems of the given type"() {
         given:
         String id = "someId"
 
