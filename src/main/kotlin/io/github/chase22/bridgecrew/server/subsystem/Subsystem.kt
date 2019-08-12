@@ -9,7 +9,7 @@ abstract class Subsystem(
     abstract fun getTemperatureChange(): Int
     abstract fun getEnergyConsumption(): Long
     abstract fun getTypes(): List<SubsystemType>
-    abstract fun updateInternal(context: Ship)
+    protected abstract fun updateInternal(context: Ship)
 
     override fun update(context: Ship) {
         updateInternal(context)
