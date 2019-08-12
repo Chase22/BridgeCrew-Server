@@ -1,4 +1,4 @@
-package io.github.chase22.bridgecrew.server.common
+package io.github.chase22.bridgecrew.server.base
 
 import io.reactivex.Maybe
 import io.reactivex.Single
