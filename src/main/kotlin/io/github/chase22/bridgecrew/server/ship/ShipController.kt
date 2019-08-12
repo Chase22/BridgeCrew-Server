@@ -2,7 +2,6 @@ package io.github.chase22.bridgecrew.server.ship
 
 import io.github.chase22.bridgecrew.server.subsystem.SubsystemRvo
 import io.github.chase22.bridgecrew.server.subsystem.SubsystemType
-import io.github.chase22.bridgecrew.server.websocket.WebSocketServer
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpResponse
@@ -12,7 +11,6 @@ import javax.inject.Inject
 
 @Controller("/ship")
 class ShipController @Inject constructor(
-        private val webSocketServer: WebSocketServer,
         private val shipService: ShipService
 ) : ShipOperations {
 
@@ -33,8 +31,6 @@ class ShipController @Inject constructor(
 
     @Post
     override fun postShip(@Body shipRvo: ShipRvo): Single<HttpStatus> {
-        shipService.save(shipService.fromRvo(shipRvo))
-        webSocketServer.broadcast(shipRvo)
-        return Single.just(HttpStatus.CREATED)
+        return shipService.save(shipService.fromRvo(shipRvo)).map { HttpStatus.CREATED }
     }
 }

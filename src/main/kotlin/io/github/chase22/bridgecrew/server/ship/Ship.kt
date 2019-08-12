@@ -1,9 +1,11 @@
 package io.github.chase22.bridgecrew.server.ship
 
 import io.github.chase22.bridgecrew.server.base.Updateable
+import io.github.chase22.bridgecrew.server.subsystem.EnergyProductionSubsystem
 import io.github.chase22.bridgecrew.server.subsystem.Subsystem
 import io.github.chase22.bridgecrew.server.subsystem.SubsystemRvo
 import io.github.chase22.bridgecrew.server.subsystem.SubsystemType
+import io.github.chase22.bridgecrew.server.subsystem.SubsystemType.ENERGY_PRODUCTION
 
 data class Ship(
         val id: String,
@@ -16,12 +18,18 @@ data class Ship(
 ) : Updateable<Unit> {
 
     override fun update(context: Unit) {
-        subsystem.sortedBy { subsystem ->
-            subsystem.getTypes().minBy { subsystemType -> subsystemType.ordinal }!!
-        }.forEach {
-            temperature += it.getTemperatureChange()
-            it.update(this)
+        val energyProduction: List<Subsystem>? = getSubsystemsByType(ENERGY_PRODUCTION)
+        energyProduction?.forEach { it.update(this) }
+
+        energy = energyProduction?.filterIsInstance(EnergyProductionSubsystem::class.java)
+                ?.map { it.getEnergyProduced() }?.sum() ?: 0
+
+        val energyConsumed = subsystem.map(Subsystem::getEnergyConsumption).sum()
+
+        if (energyConsumed > energy) {
+
         }
+
     }
 
     fun getSubsystemsByType(type: SubsystemType): List<Subsystem>? =
