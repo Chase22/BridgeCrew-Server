@@ -27,11 +27,11 @@ class Game(
 
 @Singleton
 class GameService {
-    val games: MutableMap<String, Game> = HashMap()
+    val games: MutableMap<String, Game> = hashMapOf(Pair("gameid", Game("gameid")))
 
     fun addGame(game: Game) = games.put(game.id, game)
     fun removeGame(game: Game) = removeGame(game.id)
-    fun removeGame(id: String) = games.remove(id)
+    private fun removeGame(id: String) = games.remove(id)
 
 
 }
