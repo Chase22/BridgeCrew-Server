@@ -1,7 +1,6 @@
 package io.github.chase22.bridgecrew.server.ship
 
 import io.github.chase22.bridgecrew.server.subsystem.SubsystemRegistry
-import io.github.chase22.bridgecrew.server.websocket.WebSocketServer
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.slf4j.Logger
@@ -12,13 +11,11 @@ import javax.inject.Singleton
 @Singleton
 class ShipService @Inject constructor(
         private val shipRepository: ShipRepository,
-        private val subsystemRegistry: SubsystemRegistry,
-        private val webSocketServer: WebSocketServer) {
+        private val subsystemRegistry: SubsystemRegistry) {
 
     fun getShip(id: String): Maybe<Ship> = shipRepository.findById(id).map(this::fromEntity)
 
     fun save(ship: Ship): Single<Ship> = shipRepository.save(ship.toEntity()).map(this::fromEntity)
-            .doOnSuccess { webSocketServer.broadcast(it) }
 
     fun fromRvo(shipRvo: ShipRvo): Ship {
         val ship = Ship(
