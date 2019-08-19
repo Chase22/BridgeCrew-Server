@@ -10,16 +10,18 @@ class Game(
         ) {
     private val gameSessions: MutableMap<String, WebSocketSession> = HashMap()
 
-    fun connect(session: WebSocketSession, webSocketServer: WebSocketServer) {
-        webSocketServer.broadcast(TextMessage("User joined"), session, gameSessions.values)
+    fun connect(nickname: String, session: WebSocketSession, webSocketServer: WebSocketServer) {
+        gameSessions[session.id] = session
+        webSocketServer.broadcast(TextMessage("$nickname joined"), session, gameSessions.values)
     }
 
-    fun disconnect(session: WebSocketSession, webSocketServer: WebSocketServer) {
-        webSocketServer.broadcast(TextMessage("User joined"), session, gameSessions.values)
+    fun disconnect(nickname: String,session: WebSocketSession, webSocketServer: WebSocketServer) {
+        gameSessions.remove(session.id)
+        webSocketServer.broadcast(TextMessage("$nickname left"), session, gameSessions.values)
     }
 
-    fun onMessage(message: String, session: WebSocketSession, webSocketServer: WebSocketServer) {
-        webSocketServer.broadcast(TextMessage(message), session, gameSessions.values)
+    fun onMessage(nickname: String,message: String, session: WebSocketSession, webSocketServer: WebSocketServer) {
+        webSocketServer.broadcast(TextMessage(nickname, message), session, gameSessions.values)
     }
 
 

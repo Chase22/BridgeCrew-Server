@@ -1,3 +1,7 @@
 micronaut:
   application:
     name: bridgecrew-server
+
+jackson:
+  serialization:
+    writeDatesAsTimestamps: false

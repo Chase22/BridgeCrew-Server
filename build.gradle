@@ -36,6 +36,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
     compile "io.micronaut:micronaut-runtime"
     compile "javax.annotation:javax.annotation-api"
+
     kapt "io.micronaut:micronaut-inject-java"
     kapt "io.micronaut:micronaut-validation"
     kaptTest "io.micronaut:micronaut-inject-java"
